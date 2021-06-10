@@ -1,7 +1,7 @@
-import React from "react";
+import * as React from "react";
 import type { PromisedResourceProps, PropResources } from ".";
-import { EmptyComponent } from "../libs";
 import type { PromisedStateResource } from "../libs";
+import { EmptyComponent } from "../libs";
 
 function isPromisedStateResourceArray<T>(p: unknown): p is PromisedStateResource<T>[] {
   return Array.isArray(p);

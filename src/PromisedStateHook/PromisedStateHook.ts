@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Resource, unpackPromise } from "../libs";
 
 export function usePromisedState<T = undefined>(initialPromise?: Promise<T>) {
