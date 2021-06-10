@@ -9,7 +9,7 @@ module.exports = {
     filename: "index.js",
     publicPath: "/",
     library: "react-promised-state",
-    libraryTarget: "umd",
+    libraryTarget: "commonjs",
     umdNamedDefine: true,
   },
   resolve: {
