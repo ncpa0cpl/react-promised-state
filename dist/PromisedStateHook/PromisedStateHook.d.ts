@@ -1,0 +1,1 @@
+export declare function usePromisedState<T = undefined>(initialPromise?: Promise<T>): readonly [import("../libs").FailedPromisedStateResource | import("../libs").SuccessfullPromisedStateResource<T>, (newPromise: Promise<T>) => Promise<void>];
