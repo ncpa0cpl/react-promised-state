@@ -6,15 +6,16 @@ export function usePromisedState<T = undefined>(initialPromise?: Promise<T>) {
   const [resource, setResource] = React.useState(Resource.init<T>());
 
   const setPromise = async (newPromise: Promise<T>) => {
+    setResource(Resource.init(newPromise));
     promise.current = newPromise;
 
     const promiseResult = await unpackPromise(newPromise);
 
     if (newPromise === promise.current) {
       if ("error" in promiseResult) {
-        setResource(Resource.failure<T>(promiseResult.error));
+        setResource(Resource.failure<T>(promiseResult.error, newPromise));
       } else {
-        setResource(Resource.success<T>(promiseResult.data));
+        setResource(Resource.success<T>(promiseResult.data, newPromise));
       }
     }
   };
