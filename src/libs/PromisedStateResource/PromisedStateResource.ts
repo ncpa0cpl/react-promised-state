@@ -1,52 +1,25 @@
 import type { FailedPromisedStateResource, PromisedStateResource } from ".";
 
-function createBaseResoure<T extends PromisedStateResource<unknown>>(
-  resourceData: T,
-  origin: Promise<unknown>
-): T {
-  return Object.freeze({
-    ...resourceData,
-    _read() {
-      if (resourceData.isReady) {
-        return resourceData.data;
-      }
-      if (resourceData.error) {
-        throw resourceData.error;
-      }
-      throw origin;
-    },
-  }) as unknown as T;
-}
-
 export const Resource = {
-  init<T>(origin?: Promise<T>): PromisedStateResource<T> {
-    return createBaseResoure(
-      {
-        data: null,
-        error: null,
-        isReady: false,
-      },
-      origin ?? new Promise(() => {})
-    );
+  init<T>(): PromisedStateResource<T> {
+    return {
+      data: null,
+      error: null,
+      isReady: false,
+    };
   },
-  success<T>(data: T, origin: Promise<T>): PromisedStateResource<T> {
-    return createBaseResoure(
-      {
-        data,
-        error: null,
-        isReady: true,
-      },
-      origin
-    );
+  success<T>(data: T): PromisedStateResource<T> {
+    return {
+      data,
+      error: null,
+      isReady: true,
+    };
   },
-  failure<T>(error: Error, origin: Promise<T>): FailedPromisedStateResource {
-    return createBaseResoure(
-      {
-        data: null,
-        error,
-        isReady: false,
-      },
-      origin
-    );
+  failure(error: Error): FailedPromisedStateResource {
+    return {
+      data: null,
+      error,
+      isReady: false,
+    };
   },
 };
