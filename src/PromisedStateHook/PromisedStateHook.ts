@@ -11,12 +11,12 @@ export function usePromisedState<T = undefined>(
   const [resource, setResource] = React.useState(Resource.init<T>());
   const { readerRef, updatePromiseResource } = useSuspensePromise<T>();
 
-  const updateState = (res: PromisedStateResource<T>, origin: Promise<T>) => {
+  const updateState = React.useCallback((res: PromisedStateResource<T>, origin: Promise<T>) => {
     setResource(res);
     updatePromiseResource(res, origin);
-  };
+  }, []);
 
-  const setPromise = async (newPromise: Promise<T>) => {
+  const setPromise = React.useCallback(async (newPromise: Promise<T>) => {
     updateState(Resource.init(), newPromise);
     promise.current = newPromise;
 
@@ -29,7 +29,7 @@ export function usePromisedState<T = undefined>(
         updateState(Resource.success<T>(promiseResult.data), newPromise);
       }
     }
-  };
+  }, []);
 
   React.useEffect(() => {
     if (initialPromise) {
@@ -37,12 +37,14 @@ export function usePromisedState<T = undefined>(
     }
   }, []);
 
-  const finalResource = Object.freeze({
-    ...resource,
-    read() {
-      return readerRef.current.read();
-    },
-  });
+  const finalResource = React.useMemo(
+    () =>
+      Object.freeze({
+        ...resource,
+        read: readerRef.current.read,
+      }),
+    [resource]
+  );
 
   return [finalResource, setPromise];
 }
