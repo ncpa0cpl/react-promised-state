@@ -1,25 +1,25 @@
-import type { PromisedStateResource } from ".";
+import type { FailedPromisedStateResource, PromisedStateResource } from ".";
 
 export const Resource = {
   init<T>(): PromisedStateResource<T> {
-    return Object.freeze({
+    return {
       data: null,
       error: null,
       isReady: false,
-    });
+    };
   },
   success<T>(data: T): PromisedStateResource<T> {
-    return Object.freeze({
+    return {
       data,
       error: null,
       isReady: true,
-    });
+    };
   },
-  failure<T>(error: Error): PromisedStateResource<T> {
-    return Object.freeze({
+  failure(error: Error): FailedPromisedStateResource {
+    return {
       data: null,
       error,
       isReady: false,
-    });
+    };
   },
 };
