@@ -28,7 +28,7 @@ module.exports = {
   plugins: [
     new ESLintPlugin({
       extensions: ["ts", "tsx", "js", "jsx"],
-      exclude: ["node_modules", "webpack.config.js", "dist", ".vscode"],
+      exclude: ["node_modules", "webpack.config.js", "dist", ".vscode", "scripts"],
     }),
   ],
 };
