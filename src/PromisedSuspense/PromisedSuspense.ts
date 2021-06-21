@@ -3,7 +3,7 @@ import type { PromisedStateResource } from "../libs";
 
 export function useSuspensePromise<T>() {
   const resourceRef = useRef<PromisedStateResource<T>>();
-  const originRef = useRef(new Promise(() => {}));
+  const originRef = useRef(new Promise<T>(() => {}));
 
   const readerRef = useRef({
     read(): T {
@@ -22,6 +22,7 @@ export function useSuspensePromise<T>() {
   };
 
   return {
+    originRef,
     readerRef,
     updatePromiseResource,
   };

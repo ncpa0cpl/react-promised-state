@@ -86,20 +86,26 @@ exports.usePromisedState = void 0;
 var React = __importStar(require("react"));
 var libs_1 = require("../libs");
 var PromisedSuspense_1 = require("../PromisedSuspense");
+var RestorePreviousState_1 = require("../RestorePreviousState");
 function usePromisedState(initialPromise) {
     var _this = this;
     var promise = React.useRef();
     var _a = __read(React.useState(libs_1.Resource.init()), 2), resource = _a[0], setResource = _a[1];
-    var _b = PromisedSuspense_1.useSuspensePromise(), readerRef = _b.readerRef, updatePromiseResource = _b.updatePromiseResource;
+    var _b = PromisedSuspense_1.useSuspensePromise(), originRef = _b.originRef, readerRef = _b.readerRef, updatePromiseResource = _b.updatePromiseResource;
+    var safelySet = libs_1.useSafelySet().safelySet;
     var updateState = React.useCallback(function (res, origin) {
-        setResource(res);
-        updatePromiseResource(res, origin);
+        safelySet(function () {
+            setResource(res);
+            updatePromiseResource(res, origin);
+        });
     }, []);
     var setPromise = React.useCallback(function (newPromise) { return __awaiter(_this, void 0, void 0, function () {
-        var promiseResult;
+        var oldResource, oldOrigin, promiseResult;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
+                    oldResource = resource;
+                    oldOrigin = originRef.current;
                     updateState(libs_1.Resource.init(), newPromise);
                     promise.current = newPromise;
                     return [4 /*yield*/, libs_1.unpackPromise(newPromise)];
@@ -107,7 +113,12 @@ function usePromisedState(initialPromise) {
                     promiseResult = _a.sent();
                     if (newPromise === promise.current) {
                         if ("error" in promiseResult) {
-                            updateState(libs_1.Resource.failure(promiseResult.error), newPromise);
+                            if (promiseResult.error instanceof RestorePreviousState_1.RestorePreviousState) {
+                                updateState(oldResource, oldOrigin);
+                            }
+                            else {
+                                updateState(libs_1.Resource.failure(promiseResult.error), newPromise);
+                            }
                         }
                         else {
                             updateState(libs_1.Resource.success(promiseResult.data), newPromise);

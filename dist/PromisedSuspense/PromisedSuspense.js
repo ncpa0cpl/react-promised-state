@@ -22,6 +22,7 @@ function useSuspensePromise() {
         originRef.current = origin;
     };
     return {
+        originRef: originRef,
         readerRef: readerRef,
         updatePromiseResource: updatePromiseResource,
     };
