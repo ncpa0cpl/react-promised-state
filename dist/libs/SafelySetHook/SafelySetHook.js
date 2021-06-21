@@ -35,7 +35,7 @@ var useSafelySet = function () {
     }, []);
     React.useEffect(function () { return function () {
         isMounted.current = false;
-    }; });
+    }; }, []);
     return {
         safelySet: safelySet,
     };

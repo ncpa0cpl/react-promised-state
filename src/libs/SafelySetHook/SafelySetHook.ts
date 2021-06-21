@@ -15,9 +15,12 @@ export const useSafelySet = (): UseSafelySetResult => {
     }
   }, []);
 
-  React.useEffect(() => () => {
-    isMounted.current = false;
-  });
+  React.useEffect(
+    () => () => {
+      isMounted.current = false;
+    },
+    []
+  );
 
   return {
     safelySet,
