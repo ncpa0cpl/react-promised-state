@@ -10,6 +10,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./PromisedResourceComponent"), exports);
-__exportStar(require("./PromisedResourceHOC"), exports);
-__exportStar(require("./PromisedStateHook"), exports);
+__exportStar(require("./PromisedStateResource.types"), exports);
+__exportStar(require("./PromisedStateResource"), exports);
