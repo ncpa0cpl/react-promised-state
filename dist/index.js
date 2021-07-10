@@ -14,3 +14,4 @@ __exportStar(require("./PromisedResourceComponent"), exports);
 __exportStar(require("./PromisedResourceHOC"), exports);
 __exportStar(require("./PromisedStateHook"), exports);
 __exportStar(require("./RestorePreviousState"), exports);
+//# sourceMappingURL=index.js.map

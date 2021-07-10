@@ -24,3 +24,4 @@ exports.Resource = {
         };
     },
 };
+//# sourceMappingURL=PromisedStateResource.js.map

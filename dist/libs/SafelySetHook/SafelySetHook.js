@@ -41,3 +41,4 @@ var useSafelySet = function () {
     };
 };
 exports.useSafelySet = useSafelySet;
+//# sourceMappingURL=SafelySetHook.js.map
