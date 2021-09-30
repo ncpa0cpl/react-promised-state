@@ -39,32 +39,32 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.unpackPromise = void 0;
 function unpackPromise(promise) {
     return __awaiter(this, void 0, void 0, function () {
-        var e_1;
-        var _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    _b.trys.push([0, 2, , 3]);
-                    _a = {};
-                    return [4 /*yield*/, promise];
-                case 1: return [2 /*return*/, (_a.data = _b.sent(), _a)];
-                case 2:
-                    e_1 = _b.sent();
-                    if (!(e_1 instanceof Error)) {
-                        if (typeof e_1 === "string") {
-                            return [2 /*return*/, {
-                                    error: new Error(e_1),
-                                }];
-                        }
-                        else {
-                            return [2 /*return*/, {
-                                    error: new Error("An error occured during resolving a promise."),
-                                }];
-                        }
-                    }
-                    return [2 /*return*/, { error: e_1 }];
-                case 3: return [2 /*return*/];
-            }
+        var _this = this;
+        return __generator(this, function (_a) {
+            return [2 /*return*/, new Promise(function (resolve) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        promise
+                            .then(function (data) {
+                            resolve({ data: data });
+                        })
+                            .catch(function (e) {
+                            if (!(e instanceof Error)) {
+                                if (typeof e === "string") {
+                                    resolve({
+                                        error: new Error(e),
+                                    });
+                                }
+                                else {
+                                    resolve({
+                                        error: new Error("usePromisedState Error: An error occurred within a promise."),
+                                    });
+                                }
+                            }
+                            resolve({ error: e });
+                        });
+                        return [2 /*return*/];
+                    });
+                }); })];
         });
     });
 }
