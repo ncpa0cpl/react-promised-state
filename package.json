@@ -1,8 +1,9 @@
 {
   "name": "react-promised-state",
-  "version": "0.0.5",
-  "description": "",
-  "keywords": [],
+  "version": "0.0.6",
+  "description": "React Hook for asynchronously updated states.",
+  "keywords": ["react", "hook", "promise", "async"],
+  "license": "MIT",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
