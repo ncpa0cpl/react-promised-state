@@ -30,7 +30,7 @@
     "webpack-cli": "^4.7.2"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf ./dist && tsc",
     "lint": "eslint . --color",
     "tsc": "tsc --noEmit",
     "pretty:check": "prettier --check .",

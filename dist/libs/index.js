@@ -14,4 +14,3 @@ __exportStar(require("./EmptyComponent"), exports);
 __exportStar(require("./PromisedStateResource"), exports);
 __exportStar(require("./SafelySetHook"), exports);
 __exportStar(require("./UnpackedPromise"), exports);
-//# sourceMappingURL=index.js.map

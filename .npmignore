@@ -1,2 +1,12 @@
-node_modules
 .vscode
+.eslintrc.json
+.gitignore
+.prettierrc.json
+.eslintignore
+.git
+.prettierignore
+node_modules
+scripts
+src
+tsconfig.json
+webpack.config.js

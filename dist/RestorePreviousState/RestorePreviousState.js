@@ -29,4 +29,3 @@ var RestorePreviousState = /** @class */ (function (_super) {
     return RestorePreviousState;
 }(Error));
 exports.RestorePreviousState = RestorePreviousState;
-//# sourceMappingURL=RestorePreviousState.js.map

@@ -139,4 +139,3 @@ function usePromisedState(initialPromise) {
     return [finalResource, setPromise];
 }
 exports.usePromisedState = usePromisedState;
-//# sourceMappingURL=PromisedStateHook.js.map

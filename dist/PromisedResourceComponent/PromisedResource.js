@@ -51,4 +51,3 @@ function PromisedResource(props) {
     return React.createElement(Fallback, null);
 }
 exports.PromisedResource = PromisedResource;
-//# sourceMappingURL=PromisedResource.js.map

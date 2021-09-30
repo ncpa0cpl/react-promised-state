@@ -28,4 +28,3 @@ function useSuspensePromise() {
     };
 }
 exports.useSuspensePromise = useSuspensePromise;
-//# sourceMappingURL=PromisedSuspense.js.map

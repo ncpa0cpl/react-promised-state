@@ -29,4 +29,3 @@ function withPromisedResource(params) {
     };
 }
 exports.withPromisedResource = withPromisedResource;
-//# sourceMappingURL=PromisedResourceHOC.js.map
