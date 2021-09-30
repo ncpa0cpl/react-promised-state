@@ -32,7 +32,7 @@ export function usePromisedState<T = undefined>(
 
     if (newPromise === promise.current) {
       if ("error" in promiseResult) {
-        if (promiseResult.error instanceof RestorePreviousState) {
+        if (RestorePreviousState.isInstance(promiseResult.error)) {
           updateState(oldResource, oldOrigin);
         } else {
           updateState(Resource.failure(promiseResult.error), newPromise);

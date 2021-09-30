@@ -113,7 +113,7 @@ function usePromisedState(initialPromise) {
                     promiseResult = _a.sent();
                     if (newPromise === promise.current) {
                         if ("error" in promiseResult) {
-                            if (promiseResult.error instanceof RestorePreviousState_1.RestorePreviousState) {
+                            if (RestorePreviousState_1.RestorePreviousState.isInstance(promiseResult.error)) {
                                 updateState(oldResource, oldOrigin);
                             }
                             else {

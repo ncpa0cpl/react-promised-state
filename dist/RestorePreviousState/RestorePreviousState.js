@@ -19,8 +19,13 @@ exports.RestorePreviousState = void 0;
 var RestorePreviousState = /** @class */ (function (_super) {
     __extends(RestorePreviousState, _super);
     function RestorePreviousState() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._isRestorePreviousState = true;
+        return _this;
     }
+    RestorePreviousState.isInstance = function (e) {
+        return "_isRestorePreviousState" in e ? e._isRestorePreviousState : false;
+    };
     return RestorePreviousState;
 }(Error));
 exports.RestorePreviousState = RestorePreviousState;
