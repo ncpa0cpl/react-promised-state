@@ -63,15 +63,14 @@ To use it with it usePromisedState should be located in a component outside the 
 
 ```tsx
 import { usePromisedState } from "react-promised-state";
-UsePromisedStateResult;
-import type { UsePromisedStateResult } from "react-promised-state";
+import type { SuspenseReader } from "react-promised-state";
 
 // Method for retrieving a string value from some API
 const getTitleFromApi = (): Promise<string> => {
   return fetch("www.your-api-url.com", { method: "GET" }).then((resp) => resp.json());
 };
 
-const DisplayTitle: React.FC<{ title: UsePromisedStateResult<string> }> = ({ title }) => {
+const DisplayTitle: React.FC<{ title: SuspenseReader<string> }> = ({ title }) => {
   return <div>{title.read()}</div>;
 };
 
