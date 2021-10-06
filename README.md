@@ -47,8 +47,8 @@ const Component: React.FC = () => {
     setTitle(getTitleFromApi());
   }, []);
 
-  if (title.isReady) return <div>{title.data}</div>;
-  else if (title.error) return <div>An error occurred!</div>;
+  if (title.error) return <div>An error occurred!</div>;
+  else if (title.isReady) return <div>{title.data}</div>;
   else return <div>Loading...</div>;
 };
 ```
