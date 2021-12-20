@@ -1,16 +1,5 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __exportStar = (this && this.__exportStar) || function(m, exports) {
-    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./PromisedResourceComponent"), exports);
-__exportStar(require("./PromisedResourceHOC"), exports);
-__exportStar(require("./PromisedStateHook"), exports);
-__exportStar(require("./RestorePreviousState"), exports);
+exports.usePromisedState = void 0;
+var use_promised_state_1 = require("./use-promised-state/use-promised-state");
+Object.defineProperty(exports, "usePromisedState", { enumerable: true, get: function () { return use_promised_state_1.usePromisedState; } });
