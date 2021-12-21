@@ -11,7 +11,8 @@ export const usePromisedState = <T>(
   const [_, forceRender] = React.useReducer(forceRenderReducer, 0);
 
   const [state] = React.useState(() => {
-    const s = new StateController(initialValue);
+    const s = new StateController<T>();
+    if (initialValue) s.dispatch(initialValue);
     s.addChangeListener(() => forceRender());
     return s;
   });

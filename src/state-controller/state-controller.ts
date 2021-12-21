@@ -2,15 +2,13 @@ import { AsyncUpdateController } from "../async-update-controller/async-update-c
 import { SuspenseReader } from "../suspense-reader/suspense-reader";
 import { isGenerator } from "../utilities/is-generator";
 import { isPromise } from "../utilities/is-promise";
-import type {
-  PromisedSetStateAction,
-  PromisedState,
-  PromisedStateInitializer,
-} from "./state-controller.types";
+import type { PromisedSetStateAction, PromisedState } from "./state-controller.types";
+
+const NULL = Symbol();
 
 export class StateController<T = undefined> {
-  private data: T | null = null;
-  private error?: unknown;
+  private data: T | symbol = NULL;
+  private error: unknown = NULL;
   private isPending = true;
 
   private onChangeCallback = () => {};
@@ -18,14 +16,10 @@ export class StateController<T = undefined> {
   private asyncUpdates = new AsyncUpdateController<T>();
   private suspenseReader = new SuspenseReader<T>();
 
-  constructor(initialValue?: PromisedStateInitializer<T>) {
+  constructor() {
     this.asyncUpdates.addResolveListener((v) => this.handleSuccessfulSetStateAction(v));
     this.asyncUpdates.addRejectListener((e) => this.handleFailedSetStateAction(e));
     this.asyncUpdates.addDispatchListener(() => this.suspenseReader.reset());
-
-    if (initialValue) {
-      this.dispatch(initialValue);
-    }
 
     this.dispatch = this.dispatch.bind(this);
   }
@@ -38,17 +32,25 @@ export class StateController<T = undefined> {
     }
   }
 
+  private handleSyncSetStateAction(arg: { error: unknown } | { data: T }): void {
+    this.asyncUpdates.cancelLastDispatch();
+    this.suspenseReader.reset();
+
+    if ("error" in arg) this.handleFailedSetStateAction(arg.error);
+    else this.handleSuccessfulSetStateAction(arg.data);
+  }
+
   private handleSuccessfulSetStateAction(v: T): void {
     this.data = v;
-    this.error = null;
+    this.error = NULL;
     this.isPending = false;
-    this.suspenseReader.update(v);
+    this.suspenseReader.success(v);
 
     this.triggerChangeCallback();
   }
 
   private handleFailedSetStateAction(e: unknown): void {
-    this.data = null;
+    this.data = NULL;
     this.error = e;
     this.isPending = false;
     this.suspenseReader.fail(e);
@@ -61,9 +63,11 @@ export class StateController<T = undefined> {
 
     return {
       get data() {
-        return self.data;
+        if (self.data === NULL) return null;
+        return self.data as T;
       },
       get error() {
+        if (self.error === NULL) return null;
         if (self.error instanceof Error) return self.error;
         if (typeof self.error === "string") return new Error(self.error);
         return new Error("Last Set State Action has rejected.");
@@ -84,21 +88,19 @@ export class StateController<T = undefined> {
   dispatch(action: PromisedSetStateAction<T>): void {
     if (isGenerator(action)) {
       try {
-        const generatorResult = action(this.getState());
-        this.dispatch(generatorResult);
+        action = action(this.getState());
       } catch (e) {
-        this.asyncUpdates.cancelLastDispatch();
-        this.handleFailedSetStateAction(e);
+        this.handleSyncSetStateAction({ error: e });
+        return;
       }
-      return;
     }
 
     if (isPromise(action)) {
+      this.isPending = true;
       this.asyncUpdates.dispatch(action);
       return;
     }
 
-    this.asyncUpdates.cancelLastDispatch();
-    this.handleSuccessfulSetStateAction(action);
+    this.handleSyncSetStateAction({ data: action });
   }
 }
