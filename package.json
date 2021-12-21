@@ -28,7 +28,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.1",
     "eslint-webpack-plugin": "^2.6.0",
-    "execa": "^6.0.0",
+    "execa": "^5.1.1",
     "husky": "^7.0.4",
     "jest": "^27.4.5",
     "prettier": "^2.5.1",
@@ -47,7 +47,7 @@
     "build": "rm -rf ./dist && tsc -p ./tsconfig.build.json",
     "lint": "eslint . --color",
     "tsc": "tsc -p ./tsconfig.build.json --noEmit",
-    "pretty:check": "prettier --check .",
+    "prettier:check": "prettier --check .",
     "test": "jest --coverage",
     "prepare:push": "ts-node ./scripts/push-prepare.ts"
   }
