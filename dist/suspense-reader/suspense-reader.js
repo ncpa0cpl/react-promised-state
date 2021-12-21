@@ -6,16 +6,18 @@ class SuspenseReader {
     constructor() {
         this.value = UNDEFINED;
         this.error = UNDEFINED;
-        this.isPending = true;
+        this.isPending = false;
         this.resolve = () => { };
         this.reject = (_) => { };
         this.reset();
     }
     reset() {
-        this.value = UNDEFINED;
-        this.error = UNDEFINED;
-        this.isPending = true;
+        if (this.isPending)
+            return;
         this.promise = new Promise((onSuccess, onFailure) => {
+            this.value = UNDEFINED;
+            this.error = UNDEFINED;
+            this.isPending = true;
             this.resolve = onSuccess;
             this.reject = onFailure;
         });
@@ -23,18 +25,22 @@ class SuspenseReader {
     read() {
         if (this.isPending)
             throw this.promise;
-        if (this.error !== UNDEFINED) {
+        if (this.error === UNDEFINED) {
             return this.value;
         }
         throw this.error;
     }
-    update(v) {
+    success(v) {
+        if (!this.isPending)
+            throw Error("Suspense Reader de-sync.");
         this.value = v;
         this.error = UNDEFINED;
         this.isPending = false;
         this.resolve();
     }
     fail(e) {
+        if (!this.isPending)
+            throw Error("Suspense Reader de-sync.");
         this.value = UNDEFINED;
         this.error = e;
         this.isPending = false;

@@ -8,6 +8,6 @@ export declare class SuspenseReader<T> {
     constructor();
     reset(): void;
     read(): T;
-    update(v: T): void;
+    success(v: T): void;
     fail(e: unknown): void;
 }

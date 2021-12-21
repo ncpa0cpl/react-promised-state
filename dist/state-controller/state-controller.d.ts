@@ -1,13 +1,14 @@
-import type { PromisedSetStateAction, PromisedState, PromisedStateInitializer } from "./state-controller.types";
+import type { PromisedSetStateAction, PromisedState } from "./state-controller.types";
 export declare class StateController<T = undefined> {
     private data;
-    private error?;
+    private error;
     private isPending;
     private onChangeCallback;
     private asyncUpdates;
     private suspenseReader;
-    constructor(initialValue?: PromisedStateInitializer<T>);
+    constructor();
     private triggerChangeCallback;
+    private handleSyncSetStateAction;
     private handleSuccessfulSetStateAction;
     private handleFailedSetStateAction;
     getState(): PromisedState<T>;

@@ -10,7 +10,9 @@ const forceRenderReducer = (i) => i + 1;
 const usePromisedState = (initialValue) => {
     const [_, forceRender] = react_1.default.useReducer(forceRenderReducer, 0);
     const [state] = react_1.default.useState(() => {
-        const s = new state_controller_1.StateController(initialValue);
+        const s = new state_controller_1.StateController();
+        if (initialValue)
+            s.dispatch(initialValue);
         s.addChangeListener(() => forceRender());
         return s;
     });
