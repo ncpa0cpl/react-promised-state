@@ -16,7 +16,10 @@ class StateController {
         this.suspenseReader = new suspense_reader_1.SuspenseReader();
         this.asyncUpdates.addResolveListener((v) => this.handleSuccessfulSetStateAction(v));
         this.asyncUpdates.addRejectListener((e) => this.handleFailedSetStateAction(e));
-        this.asyncUpdates.addDispatchListener(() => this.suspenseReader.reset());
+        this.asyncUpdates.addDispatchListener(() => {
+            this.suspenseReader.reset();
+            this.triggerChangeCallback();
+        });
         this.dispatch = this.dispatch.bind(this);
     }
     triggerChangeCallback() {
