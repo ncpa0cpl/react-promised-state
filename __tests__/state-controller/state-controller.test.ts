@@ -18,7 +18,7 @@ describe("StateController", () => {
   beforeEach(() => {
     controller = new StateController();
     state = controller.getState();
-    onChange = jest.fn();
+    onChange = jest.fn(() => {});
 
     controller.addChangeListener(onChange);
   });
@@ -245,25 +245,25 @@ describe("StateController", () => {
     it("should correctly trigger the onChange callback", async () => {
       expect(onChange).toHaveBeenCalledTimes(0);
       controller.dispatch(sleep(1).then(() => "FOO"));
-      expect(onChange).toHaveBeenCalledTimes(0);
-      await sleep(2);
       expect(onChange).toHaveBeenCalledTimes(1);
+      await sleep(2);
+      expect(onChange).toHaveBeenCalledTimes(2);
       controller.dispatch(sleep(1).then(() => "BAR"));
-      expect(onChange).toHaveBeenCalledTimes(1);
-      await sleep(2);
-      expect(onChange).toHaveBeenCalledTimes(2);
-      controller.dispatch(sleep(1).then(() => "BAZ"));
-      expect(onChange).toHaveBeenCalledTimes(2);
-      await sleep(2);
       expect(onChange).toHaveBeenCalledTimes(3);
+      await sleep(2);
+      expect(onChange).toHaveBeenCalledTimes(4);
+      controller.dispatch(sleep(1).then(() => "BAZ"));
+      expect(onChange).toHaveBeenCalledTimes(5);
+      await sleep(2);
+      expect(onChange).toHaveBeenCalledTimes(6);
       controller.dispatch(
         sleep(1).then(() => {
           throw new Error("error");
         })
       );
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(7);
       await sleep(2);
-      expect(onChange).toHaveBeenCalledTimes(4);
+      expect(onChange).toHaveBeenCalledTimes(8);
     });
 
     it("should correctly handle rejected error", async () => {
@@ -390,25 +390,25 @@ describe("StateController", () => {
     it("should correctly trigger the onChange callback", async () => {
       expect(onChange).toHaveBeenCalledTimes(0);
       controller.dispatch(() => sleep(1).then(() => "FOO"));
-      expect(onChange).toHaveBeenCalledTimes(0);
-      await sleep(2);
       expect(onChange).toHaveBeenCalledTimes(1);
+      await sleep(2);
+      expect(onChange).toHaveBeenCalledTimes(2);
       controller.dispatch(() => sleep(1).then(() => "BAR"));
-      expect(onChange).toHaveBeenCalledTimes(1);
-      await sleep(2);
-      expect(onChange).toHaveBeenCalledTimes(2);
-      controller.dispatch(() => sleep(1).then(() => "BAZ"));
-      expect(onChange).toHaveBeenCalledTimes(2);
-      await sleep(2);
       expect(onChange).toHaveBeenCalledTimes(3);
+      await sleep(2);
+      expect(onChange).toHaveBeenCalledTimes(4);
+      controller.dispatch(() => sleep(1).then(() => "BAZ"));
+      expect(onChange).toHaveBeenCalledTimes(5);
+      await sleep(2);
+      expect(onChange).toHaveBeenCalledTimes(6);
       controller.dispatch(() =>
         sleep(1).then(() => {
           throw new Error("error");
         })
       );
-      expect(onChange).toHaveBeenCalledTimes(3);
+      expect(onChange).toHaveBeenCalledTimes(7);
       await sleep(2);
-      expect(onChange).toHaveBeenCalledTimes(4);
+      expect(onChange).toHaveBeenCalledTimes(8);
     });
 
     it("should correctly handle rejected error", async () => {
