@@ -1,6 +1,25 @@
+import chalk from "chalk";
 import execa from "execa";
 import readline from "readline";
-import chalk from "chalk";
+
+export class OperationError extends Error {
+  private readonly _isOperationError = true;
+
+  static isOperationError(e: Error | OperationError): e is OperationError {
+    if ("_isOperationError" in e) {
+      return e._isOperationError === true;
+    }
+    return false;
+  }
+
+  constructor(name: string, data: string) {
+    super("Operation Error");
+
+    console.error(`[${chalk.red("✕")}] ${name}\n`);
+    console.error(data);
+    console.info("\n", chalk.redBright("Exiting"));
+  }
+}
 
 export async function run<T>(promise: Promise<T>) {
   try {
@@ -14,10 +33,7 @@ export async function run<T>(promise: Promise<T>) {
 }
 
 export function onError(name: string, v: execa.ExecaError<string>) {
-  console.error(`[${chalk.red("✕")}] ${name}\n`);
-  console.error(v.stdout, "\n", chalk.red(v.stderr));
-  console.info("\n", chalk.redBright("Exiting"));
-  throw new Error();
+  throw new OperationError(name, v.stdout + "\n" + chalk.red(v.stderr));
 }
 
 export function onSuccess(name: string) {

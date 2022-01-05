@@ -1,5 +1,6 @@
 webpack
 webpack.config.js
+jest.config.js
 node_modules
 .vscode
 dist
