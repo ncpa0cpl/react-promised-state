@@ -4,56 +4,120 @@ React Hook for storing state that's updated asynchronously.
 
 ## Usage
 
-`usePromisedState` hook only accepts Promise objects as initial value.
+`usePromisedState` hook can accept a value, a function returning a value or a function returning a Promise resolving a value as it's initial parameters and as SetStateAction argument, SetStateAction argument can additionally be a regular Promises.
 
-`usePromisedState` returns a tuple with a Resource object and a "setMethod".
+`usePromisedState` returns a 2-tuple with a PromisedState object and a SetStateAction dispatch function.
 
-The "setMethod" accepts only Promise objects as it's parameter.
-
-Resource object structure is as seen here:
+PromisedState object structure is as seen here:
 
 ```ts
-type Resource<T> = {
-  isReady: boolean;
+type PromisedState<T> = {
+  isPending: boolean;
   data: T | null;
   error: Error | null;
+
+  read(): T;
 };
 ```
 
-`Resource.isReady` is a boolean indicating if the last provided Promise is resolved/rejected (true) or is still pending (false).
+- `PromisedState.isPending` is a boolean indicating if the last provided SetStateAction Promise is resolved/rejected (false) or is still pending (true). Is always false if the last SetStateAction is not a Promise.
 
-`Resource.data` holds the result of the last Promise provided to the usePromisedState hook, it is null if a promise is pending.
+- `PromisedState.data` holds the actual state value. It is not set to empty when a dispatched promise is pending.
 
-`Resource.error` holds the error of the last Promise provided to the usePromisedState hook.
+- `PromisedState.error` holds the error rejected by the last dispatched Promise or SetStateAction function. It is not set to empty when a dispatched promise is pending.
 
-If the `Resource.error` is not null then the `Resource.data` will be always null, if the `Resource.data` is not null then the `Resource.error` will be always null.
+- `PromisedState.read()` is a function that returns the value stored in the `data` property if no error is present and not pending. If a dispatched promise is pending it will throw that promise. If an error is present it will throw that error. It's intended to be used with the React.Suspense component.
 
-#### Example
+### Initiation
+
+`usePromisedState` accepts one of the three initial value types:
+
+- regular value, like a string, number, array or object
+
+```ts
+const [state, setState] = usePromisedState("value"); // state: PromisedState<string>
+// or
+const [state, setState] = usePromisedState(123); // state: PromisedState<number>
+```
+
+- a generator function returning a regular value
+
+```ts
+const [state, setState] = usePromisedState(() => ["value"]); // state: PromisedState<string[]>
+// or
+const [state, setState] = usePromisedState(() => new Set<number>()); // state: PromisedState<Set<number>>
+```
+
+- a generator function returning a Promise
+
+```ts
+const [state, setState] = usePromisedState(() => Promise.resolve({ foo: "foo" })); // state: PromisedState<{ foo: string }>
+// or
+const [state, setState] = usePromisedState(() => Promise.resolve([1, 2, 3])); // state: PromisedState<number[]>
+```
+
+### SetStateAction Dispatch Function
+
+The dispatch function of the promised state can accept:
+
+- regular value like a string, number, array or object
+
+```ts
+const [state, setState] = usePromisedState<string>(); // state: PromisedState<string | number>
+
+setState("hello world");
+```
+
+- a generator function returning a regular value
+
+```ts
+const [state, setState] = usePromisedState<string[]>(); // state: PromisedState<string[]>
+
+setState((currentState: PromisedState<string[]>) => ["foo", "bar", "baz"]);
+```
+
+- a generator function returning a Promise
+
+```ts
+const [state, setState] = usePromisedState<{ foo: string }>(); // state: PromisedState<{ foo: string }>
+
+setState((currentState: PromisedState<{ foo: string }>) => Promise.resolve({ foo: "foo bar baz" }));
+```
+
+- a Promise
+
+```ts
+const [state, setState] = usePromisedState<Set<number>>(); // state: PromisedState<Set<number>>
+
+setState(Promise.resolve(new Set([1, 2, 3])));
+```
+
+## Examples
 
 ```tsx
 import { usePromisedState } from "react-promised-state";
 
 // Method for retrieving a string value from some API
 const getTitleFromApi = (): Promise<string> => {
-  return fetch("www.your-api-url.com", { method: "GET" }).then((resp) => resp.json());
+  return fetch("www.your-api-url.com", { method: "GET" }).then((resp) => resp.text());
 };
 
 const Component: React.FC = () => {
   // Use hook and set an initial value
-  const [title, setTitle] = usePromisedState(Promise.resolve("Initial Value"));
+  const [title, setTitle] = usePromisedState("Initial Value");
 
   React.useEffect(() => {
     // fetch data and update the state
     setTitle(getTitleFromApi());
   }, []);
 
-  if (title.error) return <div>An error occurred!</div>;
-  else if (title.isReady) return <div>{title.data}</div>;
-  else return <div>Loading...</div>;
+  if (title.isPending) <div>Loading...</div>;
+  else if (title.error) return <div>An error occurred!</div>;
+  else return <div>{title.data}</div>;
 };
 ```
 
-### Suspense
+### React Suspense
 
 `usePromisedState` supports the React Suspense component.
 
@@ -75,13 +139,8 @@ const DisplayTitle: React.FC<{ title: SuspenseReader<string> }> = ({ title }) =>
 };
 
 const Component: React.FC = () => {
-  // Use hook and set an initial value
-  const [title, setTitle] = usePromisedState(Promise.resolve("Initial Value"));
-
-  React.useEffect(() => {
-    // fetch data and update the state
-    setTitle(getTitleFromApi());
-  }, []);
+  // Set a generator that will fetch the title as the initial value
+  const [title, setTitle] = usePromisedState(() => getTitleFromApi());
 
   return (
     <React.Suspense fallback={<div>Loading...</div>}>
